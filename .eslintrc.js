@@ -8,15 +8,22 @@ module.exports = {
     "standard-with-typescript",
     "next/core-web-vitals",
     "prettier",
+    "plugin:storybook/recommended",
   ],
-  overrides: [],
+  overrides: [
+    {
+      files: ["*.stories.@(js|jsx|ts|tsx,mjs,cjs)"],
+    },
+  ],
   parserOptions: {
     ecmaVersion: "latest",
     sourceType: "module",
     project: "./tsconfig.json",
   },
   plugins: ["react"],
-  rules: {},
+  rules: {
+    "storybook/hierarchy-separator": "error",
+  },
   settings: {
     react: {
       version: "detect",
