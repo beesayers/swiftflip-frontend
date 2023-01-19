@@ -1,6 +1,17 @@
-import "../styles/globals.css";
 import type { AppProps } from "next/app";
+import type { ReactNode } from "react";
+import "../styles/globals.css";
+import { NextPageWithLayout } from "./page";
 
-export default function App({ Component, pageProps }: AppProps): JSX.Element {
-  return <Component {...pageProps} />;
+interface AppPropsWithLayout extends AppProps {
+  Component: NextPageWithLayout;
+}
+
+export default function App({
+  Component,
+  pageProps,
+}: AppPropsWithLayout): ReactNode {
+  const getLayout = Component.getLayout ?? ((page) => page);
+
+  return getLayout(<Component {...pageProps} />);
 }

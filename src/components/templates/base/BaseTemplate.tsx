@@ -1,8 +1,8 @@
 export interface IBaseTemplate {
-  sample: string;
+  sampleProp: string;
 }
 
-const BaseTemplate: React.FC<IBaseTemplate> = ({ sample }) => {
+const BaseTemplate: React.FC<IBaseTemplate> = ({ sampleProp }) => {
   return <div>Hello world!</div>;
 };
 
