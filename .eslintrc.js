@@ -9,10 +9,14 @@ module.exports = {
     "next/core-web-vitals",
     "prettier",
     "plugin:storybook/recommended",
+    "next",
   ],
   overrides: [
     {
       files: ["*.stories.@(js|jsx|ts|tsx,mjs,cjs)"],
+      rules: {
+        "storybook/hierarchy-separator": "error",
+      },
     },
   ],
   parserOptions: {
@@ -21,9 +25,6 @@ module.exports = {
     project: "./tsconfig.json",
   },
   plugins: ["react"],
-  rules: {
-    "storybook/hierarchy-separator": "error",
-  },
   settings: {
     react: {
       version: "detect",
