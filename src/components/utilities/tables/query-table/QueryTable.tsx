@@ -1,4 +1,5 @@
 import { useLayoutEffect, useRef, useState } from "react";
+import makeApiRequest from "../../../../api/api";
 
 export interface IProduct {
   rowId: number;
@@ -6,8 +7,8 @@ export interface IProduct {
   keywords: string | undefined;
   quantity: number | undefined;
   min: number | undefined;
-  median: number | undefined;
-  average: number | undefined;
+  med: number | undefined;
+  avg: number | undefined;
   max: number | undefined;
 }
 
@@ -37,38 +38,61 @@ const QueryTable: React.FC<IProduct[]> = (initialProducts) => {
     setIndeterminate(false);
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>): void => {
+  const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>): Promise<void> => {
     // handle event when user presses enter and input field is not empty
     const targetRowId = e.currentTarget.id;
     const keywords = e.currentTarget.value;
     const enterOrTab = e.key === "Enter" || e.key === "Tab";
 
     if (enterOrTab && keywords !== "") {
-      alert("Search for: " + keywords + " on item " + targetRowId);
-      updateProduct(targetRowId, keywords, 0, 0, 0, 0, 0);
+      await executeSearch(targetRowId, keywords);
     }
-    console.log(products);
+  };
+
+  const executeSearch = async (targetRowId: string, keywords: string): Promise<void> => {
+    // create payload for API call
+    const data = {
+      keywords,
+      condition: "3000",
+      sortOrder: "BestMatch",
+    };
+
+    // call API
+    const json = await makeApiRequest("search", "POST", data);
+
+    // verify response
+    if (json === undefined) {
+      alert("Error: API call failed");
+    } else if (json.ebaySearchResults === undefined) {
+      alert("No results found");
+    } else {
+      console.log("Ebay search results returned: ", json.ebaySearchResults.length);
+    }
+
+    // update product
+    updateProduct(targetRowId, keywords, json._id, json.stats.quantity, json.stats.min, json.stats.med, json.stats.avg, json.stats.max);
   };
 
   const updateProduct = (
     targetRowId: string,
     keywords: string,
+    searchId: string,
     quantity: number,
     min: number,
-    median: number,
-    average: number,
+    med: number,
+    avg: number,
     max: number
   ): void => {
     const updatedProducts = products.map((product) => {
       if (product.rowId.toString() === targetRowId) {
         return {
           ...product,
-          searchId: Math.random().toString(36).substring(3, 8),
+          searchId,
           keywords,
           quantity,
           min,
-          median,
-          average,
+          med,
+          avg,
           max,
         };
       }
@@ -146,16 +170,16 @@ const QueryTable: React.FC<IProduct[]> = (initialProducts) => {
                       Product Description
                     </th>
                     <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                      Quantity Returned
+                      Results
                     </th>
                     <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                       Min $
                     </th>
                     <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                      Median $
+                      Med $
                     </th>
                     <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                      Average $
+                      Avg $
                     </th>
                     <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                       Max $
@@ -193,21 +217,24 @@ const QueryTable: React.FC<IProduct[]> = (initialProducts) => {
                           id={product.rowId.toString()}
                           className="w-full h-full m-0 pl-3 pr-0 text-sm border-gray-300 text-gray-500 focus:ring-indigo-500 rounded-md"
                           placeholder="detailed product description"
+                          // eslint-disable-next-line @typescript-eslint/no-misused-promises
                           onKeyDown={handleKeyDown}
                         />
                       </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{product.quantity}</td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                        {product.min !== undefined ? `$${product.min.toLocaleString("en")}` : ""}
+                        {product.quantity === 0 ? "No Results Found" : product.quantity}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                        {product.median !== undefined ? `$${product.median.toLocaleString("en")}` : ""}
+                        {product.min !== undefined ? `${product.min.toLocaleString("en-US", { style: "currency", currency: "USD" })}` : ""}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                        {product.average !== undefined ? `$${product.average.toLocaleString("en")}` : ""}
+                        {product.med !== undefined ? `${product.med.toLocaleString("en-US", { style: "currency", currency: "USD" })}` : ""}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                        {product.max !== undefined ? `$${product.max.toLocaleString("en")}` : ""}
+                        {product.avg !== undefined ? `${product.avg.toLocaleString("en-US", { style: "currency", currency: "USD" })}` : ""}
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                        {product.max !== undefined ? `${product.max.toLocaleString("en-US", { style: "currency", currency: "USD" })}` : ""}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 space-x-3 text-sm">
                         <a href="#" className="text-red-600 hover:text-red-800">

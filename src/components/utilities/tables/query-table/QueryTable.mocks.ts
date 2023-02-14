@@ -9,8 +9,8 @@ const base: IProduct[] = [
     keywords: undefined,
     quantity: undefined,
     min: undefined,
-    median: undefined,
-    average: undefined,
+    med: undefined,
+    avg: undefined,
     max: undefined,
   },
   {
@@ -19,8 +19,8 @@ const base: IProduct[] = [
     keywords: undefined,
     quantity: undefined,
     min: undefined,
-    median: undefined,
-    average: undefined,
+    med: undefined,
+    avg: undefined,
     max: undefined,
   },
 ];
