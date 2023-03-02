@@ -1,10 +1,13 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import makeApiRequest from "../../../../api/api";
+import { IEbaySearchResult } from "../../../../lib/types";
+import QueryDetailModal from "../query-detail-modal/QueryDetailModal";
 
 export interface IProduct {
   rowId: number;
   searchId: string | undefined;
   keywords: string | undefined;
+  ebaySearchResults: IEbaySearchResult[] | undefined;
   quantity: number | undefined;
   min: number | undefined;
   med: number | undefined;
@@ -20,8 +23,10 @@ const QueryTable: React.FC<IProduct[]> = (initialProducts) => {
   const checkbox = useRef<HTMLInputElement>(null);
   const [checked, setChecked] = useState(false);
   const [indeterminate, setIndeterminate] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
   const [selectedProducts, setSelectedProducts] = useState<IProduct[]>([]);
   const [products, setProducts] = useState<IProduct[]>(Object.values(initialProducts));
+  const [modalProductList, setModalProductList] = useState<IEbaySearchResult[]>([]);
 
   useLayoutEffect(() => {
     const isIndeterminate = selectedProducts.length > 0 && selectedProducts.length < products.length;
@@ -70,13 +75,24 @@ const QueryTable: React.FC<IProduct[]> = (initialProducts) => {
     }
 
     // update product
-    updateProduct(targetRowId, keywords, json._id, json.stats.quantity, json.stats.min, json.stats.med, json.stats.avg, json.stats.max);
+    updateProduct(
+      targetRowId,
+      keywords,
+      json._id,
+      json.ebaySearchResults,
+      json.stats.quantity,
+      json.stats.min,
+      json.stats.med,
+      json.stats.avg,
+      json.stats.max
+    );
   };
 
   const updateProduct = (
     targetRowId: string,
     keywords: string,
     searchId: string,
+    ebaySearchResults: IEbaySearchResult[],
     quantity: number,
     min: number,
     med: number,
@@ -87,8 +103,9 @@ const QueryTable: React.FC<IProduct[]> = (initialProducts) => {
       if (product.rowId.toString() === targetRowId) {
         return {
           ...product,
-          searchId,
           keywords,
+          searchId,
+          ebaySearchResults,
           quantity,
           min,
           med,
@@ -153,6 +170,15 @@ const QueryTable: React.FC<IProduct[]> = (initialProducts) => {
                     Save
                   </button>
                 </div>
+              )}
+              {modalOpen && (
+                <QueryDetailModal
+                  ebaySearchResults={modalProductList}
+                  isOpen={modalOpen}
+                  handleClose={() => {
+                    setModalOpen(!modalOpen);
+                  }}
+                ></QueryDetailModal>
               )}
               <table className="min-w-full table-fixed divide-y divide-gray-300">
                 <thead className="bg-gray-50">
@@ -236,15 +262,24 @@ const QueryTable: React.FC<IProduct[]> = (initialProducts) => {
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                         {product.max !== undefined ? `${product.max.toLocaleString("en-US", { style: "currency", currency: "USD" })}` : ""}
                       </td>
-                      <td className="whitespace-nowrap px-3 py-4 space-x-3 text-sm">
-                        <a href="#" className="text-red-600 hover:text-red-800">
-                          {product.quantity !== undefined ? "Remove" : ""}
-                          <span className="sr-only">, {product.rowId}</span>
-                        </a>
-                        <a href="#" className="text-indigo-600 hover:text-indigo-900">
-                          {product.quantity !== undefined ? "Save" : ""}
-                          <span className="sr-only">, {product.rowId}</span>
-                        </a>
+                      <td className="whitespace-nowrap pl-3 py-4 space-x-3 text-sm">
+                        <div>
+                          <button
+                            className="inline-flex items-center rounded border border-gray-300 bg-blue-600 px-2.5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-30"
+                            onClick={() => {
+                              setModalOpen(true);
+                              setModalProductList(product.ebaySearchResults ?? []);
+                            }}
+                          >
+                            Details
+                          </button>
+                          <button className="inline-flex items-center rounded border border-gray-300 bg-red-600 px-2.5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-30">
+                            Remove
+                          </button>
+                          <button className="inline-flex items-center rounded border border-gray-300 bg-indigo-600 px-2.5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-30">
+                            Save
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}
