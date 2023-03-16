@@ -118,6 +118,35 @@ const QueryTable: React.FC<IProduct[]> = (initialProducts) => {
     setProducts(updatedProducts);
   };
 
+  const addRows = (numRows: number): void => {
+    setProducts((products) => {
+      const newProducts = [...products];
+      for (let i = 0; i < numRows; i++) {
+        newProducts.push({
+          rowId: products[products.length - 1].rowId + 1 + i,
+          searchId: undefined,
+          keywords: undefined,
+          ebaySearchResults: undefined,
+          quantity: undefined,
+          min: undefined,
+          med: undefined,
+          avg: undefined,
+          max: undefined,
+        });
+      }
+      return newProducts;
+    });
+  };
+
+  const removeRow = (rowId: number): void => {
+    setProducts((products) => {
+      const newProducts = [...products];
+      const index = newProducts.findIndex((product) => product.rowId === rowId);
+      newProducts.splice(index, 1);
+      return newProducts;
+    });
+  };
+
   return (
     <div className="px-4 sm:px-6 lg:px-8">
       <div className="sm:flex sm:items-center">
@@ -132,6 +161,9 @@ const QueryTable: React.FC<IProduct[]> = (initialProducts) => {
           <button
             type="button"
             className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
+            onClick={() => {
+              addRows(1);
+            }}
           >
             + 1 line
           </button>
@@ -139,6 +171,9 @@ const QueryTable: React.FC<IProduct[]> = (initialProducts) => {
           <button
             type="button"
             className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
+            onClick={() => {
+              addRows(5);
+            }}
           >
             + 5 lines
           </button>
@@ -146,6 +181,9 @@ const QueryTable: React.FC<IProduct[]> = (initialProducts) => {
           <button
             type="button"
             className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
+            onClick={() => {
+              addRows(10);
+            }}
           >
             + 10 lines
           </button>
@@ -273,7 +311,12 @@ const QueryTable: React.FC<IProduct[]> = (initialProducts) => {
                           >
                             Details
                           </button>
-                          <button className="inline-flex items-center rounded border border-gray-300 bg-red-600 px-2.5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-30">
+                          <button
+                            className="inline-flex items-center rounded border border-gray-300 bg-red-600 px-2.5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-30"
+                            onClick={() => {
+                              removeRow(product.rowId);
+                            }}
+                          >
                             Remove
                           </button>
                           <button className="inline-flex items-center rounded border border-gray-300 bg-indigo-600 px-2.5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-30">
