@@ -47,8 +47,6 @@ const QueryDetailModal: React.FC<IQueryDetailModal> = ({ ebaySearchResults, isOp
     setSortHeader(header as string);
     const sortedProducts = [...products];
 
-    // how do i assign a logical
-
     if (tempSort === "asc") {
       sortedProducts.sort((a, b) => {
         if (header === "Title") {
@@ -131,7 +129,7 @@ const QueryDetailModal: React.FC<IQueryDetailModal> = ({ ebaySearchResults, isOp
                       <XMarkIcon className="h-5 w-6 align-middle" />
                     </button>
                   </div>
-                  <div className="hidden sm:block ">
+                  <div className="hidden sm:block">
                     <div className="inline-block min-w-full border-b border-gray-200 align-middle">
                       <table className="min-w-full">
                         <thead className="sticky top-0 z-10">
@@ -146,9 +144,11 @@ const QueryDetailModal: React.FC<IQueryDetailModal> = ({ ebaySearchResults, isOp
                               />
                             </th>
                             <th className="px-2 text-left text-sm font-semibold text-gray-900" scope="col" />
-                            {/* sortable table headers */}
+                            {/* 
+                              Sortable table headers 
+                            */}
                             {headers.map((header, index) => (
-                              <th key={header} className="px-2 py-3 text-left text-sm font-semibold text-gray-900" scope="col">
+                              <th key={header} className="px-2 py-3 text-left text-sm font-semibold text-gray-900 flex-nowrap" scope="col">
                                 <button
                                   onClick={(e) => {
                                     sortTable(e);
@@ -194,7 +194,7 @@ const QueryDetailModal: React.FC<IQueryDetailModal> = ({ ebaySearchResults, isOp
                                   </a>
                                 </div>
                               </td>
-                              <td className="px-2 py-3 text-sm  text-gray-900">
+                              <td className="px-2 py-3 text-sm text-gray-900 max-w-[420px]">
                                 <div className="flex flex-col">
                                   <a href={product.viewItemURL} target="_blank" rel="noopener noreferrer" className="hover:text-indigo-400">
                                     {product.title}
@@ -202,28 +202,28 @@ const QueryDetailModal: React.FC<IQueryDetailModal> = ({ ebaySearchResults, isOp
                                   <span className="font-normal text-gray-500">{product.primaryCategory.categoryName}</span>
                                 </div>
                               </td>
-                              <td className="px-2 py-3 text-sm text-gray-900">
+                              <td className="px-2 py-3 text-sm text-gray-900 min-w-[105px]">
                                 {new Date(product.listingInfo.startTime).toLocaleDateString("en-US", {
                                   month: "2-digit",
                                   day: "2-digit",
                                   year: "numeric",
                                 })}
                               </td>
-                              <td className="px-2 py-3 text-sm  text-gray-900">{product.listingInfo.listingType}</td>
-                              <td className="px-2 py-3 text-sm  text-gray-900">
+                              <td className="px-2 py-3 text-sm  text-gray-900 min-w-[95px]">{product.listingInfo.listingType}</td>
+                              <td className="px-2 py-3 text-sm  text-gray-900 min-w-[90px]">
                                 {product.sellingStatus.currentPrice.__value__.toLocaleString("en-US", {
                                   style: "currency",
                                   currency: "USD",
                                 })}
                               </td>
-                              <td className="px-2 py-3 text-sm  text-gray-900">
+                              <td className="px-2 py-3 text-sm  text-gray-900 min-w-[100px]">
                                 {product.shippingInfo.shippingServiceCost.__value__.toLocaleString("en-US", {
                                   style: "currency",
                                   currency: "USD",
                                 })}
                               </td>
 
-                              <td className="px-2 py-3 text-sm  text-gray-900">
+                              <td className="px-2 py-3 text-sm  text-gray-900 min-w-[90px]">
                                 {(
                                   product.sellingStatus.currentPrice.__value__ + product.shippingInfo.shippingServiceCost.__value__
                                 ).toLocaleString("en-US", {
