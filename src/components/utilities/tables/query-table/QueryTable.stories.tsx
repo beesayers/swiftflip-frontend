@@ -6,7 +6,7 @@ const QueryTableStory: ComponentMeta<typeof QueryTable> = {
   title: "templates/QueryTable",
   component: QueryTable,
   // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
-  argTypes: {},
+  argTypes: [],
 };
 
 export default QueryTableStory;

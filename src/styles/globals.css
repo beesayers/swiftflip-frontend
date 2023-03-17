@@ -6,4 +6,7 @@
   .btn-primary {
     @apply border-0 p-2 px-6 bg-slate-100 rounded-mdl;
   }
+  .example-reusable-class {
+    @apply text-center text-blue-500;
+  }
 }
