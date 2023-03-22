@@ -1,7 +1,7 @@
 import { useLayoutEffect, useRef, useState } from "react";
-import makeApiRequest from "../../../../api/api";
-import { IEbaySearchResult } from "../../../../lib/types";
-import QueryDetailModal from "../query-detail-modal/QueryDetailModal";
+import makeApiRequest from "../../../api/api";
+import { IEbaySearchResult } from "../../../lib/types";
+import SearchModal from "../../modals/search-modal/SearchModal";
 
 export interface IProduct {
   rowId: number;
@@ -19,13 +19,25 @@ function classNames(...classes: string[]): string {
   return classes.filter(Boolean).join(" ");
 }
 
-const QueryTable: React.FC<IProduct[]> = (initialProducts) => {
+const NewSearch: React.FC = () => {
   const checkbox = useRef<HTMLInputElement>(null);
   const [checked, setChecked] = useState(false);
   const [indeterminate, setIndeterminate] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedProducts, setSelectedProducts] = useState<IProduct[]>([]);
-  const [products, setProducts] = useState<IProduct[]>(Object.values(initialProducts));
+  const [products, setProducts] = useState<IProduct[]>([
+    {
+      rowId: 1,
+      searchId: undefined,
+      keywords: undefined,
+      ebaySearchResults: undefined,
+      quantity: undefined,
+      min: undefined,
+      med: undefined,
+      avg: undefined,
+      max: undefined,
+    },
+  ]);
   const [modalProductList, setModalProductList] = useState<IEbaySearchResult[]>([]);
 
   useLayoutEffect(() => {
@@ -121,18 +133,34 @@ const QueryTable: React.FC<IProduct[]> = (initialProducts) => {
   const addRows = (numRows: number): void => {
     setProducts((products) => {
       const newProducts = [...products];
-      for (let i = 0; i < numRows; i++) {
-        newProducts.push({
-          rowId: products[products.length - 1].rowId + 1 + i,
-          searchId: undefined,
-          keywords: undefined,
-          ebaySearchResults: undefined,
-          quantity: undefined,
-          min: undefined,
-          med: undefined,
-          avg: undefined,
-          max: undefined,
-        });
+      if (newProducts.length === 0) {
+        for (let i = 0; i < numRows; i++) {
+          newProducts.push({
+            rowId: i,
+            searchId: undefined,
+            keywords: undefined,
+            ebaySearchResults: undefined,
+            quantity: undefined,
+            min: undefined,
+            med: undefined,
+            avg: undefined,
+            max: undefined,
+          });
+        }
+      } else if (newProducts.length > 0) {
+        for (let i = 0; i < numRows; i++) {
+          newProducts.push({
+            rowId: products[products.length - 1].rowId + 1 + i,
+            searchId: undefined,
+            keywords: undefined,
+            ebaySearchResults: undefined,
+            quantity: undefined,
+            min: undefined,
+            med: undefined,
+            avg: undefined,
+            max: undefined,
+          });
+        }
       }
       return newProducts;
     });
@@ -210,13 +238,13 @@ const QueryTable: React.FC<IProduct[]> = (initialProducts) => {
                 </div>
               )}
               {modalOpen && (
-                <QueryDetailModal
+                <SearchModal
                   ebaySearchResults={modalProductList}
                   isOpen={modalOpen}
                   handleClose={() => {
                     setModalOpen(!modalOpen);
                   }}
-                ></QueryDetailModal>
+                ></SearchModal>
               )}
               <table className="min-w-full table-fixed divide-y divide-gray-300">
                 <thead className="bg-gray-50">
@@ -336,4 +364,4 @@ const QueryTable: React.FC<IProduct[]> = (initialProducts) => {
   );
 };
 
-export default QueryTable;
+export default NewSearch;

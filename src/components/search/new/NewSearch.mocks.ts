@@ -1,6 +1,6 @@
 // Use this for mocking examples of this component
 
-import { IProduct } from "./QueryTable";
+import { IProduct } from "./NewSearch";
 
 const base: IProduct[] = [
   {
@@ -27,6 +27,6 @@ const base: IProduct[] = [
   },
 ];
 
-export const mockQueryTableProps = {
+export const mockNewSearchProps = {
   base,
 };

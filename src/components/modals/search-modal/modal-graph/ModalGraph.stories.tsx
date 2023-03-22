@@ -3,7 +3,7 @@ import ModalGraph from "./ModalGraph";
 import { mockModalGraphProps } from "./ModalGraph.mocks";
 
 const ModalGraphStory: ComponentMeta<typeof ModalGraph> = {
-  title: "templates/ModalGraph",
+  title: "Modal/SearchModal/ModalGraph",
   component: ModalGraph,
   // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
   argTypes: {},

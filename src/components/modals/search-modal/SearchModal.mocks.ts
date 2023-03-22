@@ -1,8 +1,8 @@
 // Use this for mocking examples of this component
 
-import { IQueryDetailModal } from "./QueryDetailModal";
+import { ISearchModal } from "./SearchModal";
 
-const base: IQueryDetailModal = {
+const base: ISearchModal = {
   ebaySearchResults: [
     {
       itemId: "204236636211",
@@ -299,6 +299,6 @@ const base: IQueryDetailModal = {
   handleClose: () => {},
 };
 
-export const mockQueryDetailModalProps = {
+export const mockSearchModalProps = {
   base,
 };
