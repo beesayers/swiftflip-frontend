@@ -3,6 +3,7 @@ import { ChevronDownIcon, ChevronUpIcon, XMarkIcon } from "@heroicons/react/20/s
 import Image from "next/image";
 import React, { Fragment, useLayoutEffect, useRef, useState } from "react";
 import { IEbaySearchResult } from "../../../../lib/types";
+import ModalGraph from "../../graphs/modal-graph/ModalGraph";
 
 export interface IQueryDetailModal {
   ebaySearchResults: IEbaySearchResult[];
@@ -129,6 +130,7 @@ const QueryDetailModal: React.FC<IQueryDetailModal> = ({ ebaySearchResults, isOp
                       <XMarkIcon className="h-5 w-6 align-middle" />
                     </button>
                   </div>
+                  <ModalGraph data={products.map((product) => product.sellingStatus.currentPrice.__value__)} />
                   <div className="hidden sm:block">
                     <div className="inline-block min-w-full border-b border-gray-200 align-middle">
                       <table className="min-w-full">

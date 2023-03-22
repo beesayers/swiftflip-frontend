@@ -21,8 +21,10 @@
     "@headlessui/react": "^1.7.11",
     "@heroicons/react": "^2.0.16",
     "@next/font": "13.1.2",
+    "chart.js": "^3.9.1",
     "next": "13.1.2",
     "react": "18.2.0",
+    "react-chartjs-2": "^3.3.0",
     "react-dom": "18.2.0"
   },
   "devDependencies": {
