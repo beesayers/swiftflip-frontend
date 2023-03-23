@@ -181,8 +181,8 @@ const NewSearch: React.FC = () => {
         <div className="sm:flex-auto">
           <h1 className="ml-0 text-xl font-semibold text-gray-900">Product Lookup</h1>
           <p className="mt-2 text-sm text-gray-700">
-            Lookup products by detailed description, and get pricing information from Active Ebay Listings. <br />
-            Make sure to save good deals you think you could flip for a profit!
+            Search for products by description and get pricing information from Active Ebay Listings. <br />
+            Save searches to your account.
           </p>
         </div>
         <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">

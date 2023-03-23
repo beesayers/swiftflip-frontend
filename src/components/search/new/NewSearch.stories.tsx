@@ -3,7 +3,7 @@ import NewSearch from "./NewSearch";
 import { mockNewSearchProps } from "./NewSearch.mocks";
 
 const NewSearchStory: ComponentMeta<typeof NewSearch> = {
-  title: "templates/NewSearch",
+  title: "search/NewSearch",
   component: NewSearch,
   // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
   argTypes: [],
