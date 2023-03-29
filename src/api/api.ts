@@ -1,7 +1,5 @@
 const getApiUrl = (apiRoute: string): string => {
   const HOST = process.env.NEXT_PUBLIC_HOST ?? "http://localhost:8000";
-  console.log(`-- process.env.HOST: `, process.env.HOST);
-  console.log(`-- HOST: ${HOST}`);
   return `${HOST}/api/${apiRoute}`;
 };
 

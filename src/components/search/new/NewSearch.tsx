@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import makeApiRequest from "../../../api/api";
 import { IEbaySearchResult } from "../../../lib/types";
 import SearchModal from "../../modals/search-modal/SearchModal";
@@ -27,7 +27,7 @@ const NewSearch: React.FC = () => {
   const [selectedProducts, setSelectedProducts] = useState<IProduct[]>([]);
   const [products, setProducts] = useState<IProduct[]>([
     {
-      rowId: 1,
+      rowId: 0,
       searchId: undefined,
       keywords: undefined,
       ebaySearchResults: undefined,
@@ -40,7 +40,7 @@ const NewSearch: React.FC = () => {
   ]);
   const [modalProductList, setModalProductList] = useState<IEbaySearchResult[]>([]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const isIndeterminate = selectedProducts.length > 0 && selectedProducts.length < products.length;
     setChecked(selectedProducts.length === products.length);
     setIndeterminate(isIndeterminate);
@@ -55,14 +55,28 @@ const NewSearch: React.FC = () => {
     setIndeterminate(false);
   };
 
-  const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>): Promise<void> => {
+  const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>, rowId: number): Promise<void> => {
     // handle event when user presses enter and input field is not empty
     const targetRowId = e.currentTarget.id;
     const keywords = e.currentTarget.value;
     const enterOrTab = e.key === "Enter" || e.key === "Tab";
 
     if (enterOrTab && keywords !== "") {
+      // API to search ebay and save results to database
       await executeSearch(targetRowId, keywords);
+
+      // Set the focus on the input element of the next row
+      if (rowId === products[products.length - 1].rowId) {
+        // Add a new row
+        addRows(1);
+      }
+
+      // Set a timeout to ensure the new row has been added to the DOM
+      setTimeout(() => {
+        // Query all input elements inside the table
+        const inputs = document.querySelectorAll("table input[type=text]");
+        (inputs[rowId + 1] as HTMLInputElement).focus();
+      }, 0);
     }
   };
 
@@ -185,41 +199,13 @@ const NewSearch: React.FC = () => {
             Save searches to your account.
           </p>
         </div>
-        <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-          <button
-            type="button"
-            className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
-            onClick={() => {
-              addRows(1);
-            }}
-          >
-            + 1 line
-          </button>
-
-          <button
-            type="button"
-            className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
-            onClick={() => {
-              addRows(5);
-            }}
-          >
-            + 5 lines
-          </button>
-
-          <button
-            type="button"
-            className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
-            onClick={() => {
-              addRows(10);
-            }}
-          >
-            + 10 lines
-          </button>
-        </div>
       </div>
-      <div className="mt-8 flex flex-col">
+      <div className="mt-6 flex flex-col">
         <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+            {
+              // add new row button to bottom of this div
+            }
             <div className="relative overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
               {selectedProducts.length > 0 && (
                 <div className="absolute top-0 left-12 px-3 flex h-12 items-center space-x-3 bg-gray-50 sm:left-16">
@@ -310,7 +296,9 @@ const NewSearch: React.FC = () => {
                           className="w-full h-full m-0 pl-3 pr-0 text-sm border-gray-300 text-gray-500 focus:ring-indigo-500 rounded-md"
                           placeholder="detailed product description"
                           // eslint-disable-next-line @typescript-eslint/no-misused-promises
-                          onKeyDown={handleKeyDown}
+                          onKeyDown={(e) => {
+                            void handleKeyDown(e, product.rowId);
+                          }}
                         />
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
@@ -328,8 +316,8 @@ const NewSearch: React.FC = () => {
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                         {product.max !== undefined ? `${product.max.toLocaleString("en-US", { style: "currency", currency: "USD" })}` : ""}
                       </td>
-                      <td className="whitespace-nowrap pl-3 py-4 space-x-3 text-sm">
-                        <div>
+                      <td className="whitespace-nowrap pl-3 py-4 text-sm">
+                        <div className="space-x-1">
                           <button
                             className="inline-flex items-center rounded border border-gray-300 bg-blue-600 px-2.5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-30"
                             onClick={() => {
@@ -356,6 +344,18 @@ const NewSearch: React.FC = () => {
                   ))}
                 </tbody>
               </table>
+            </div>
+
+            <div className="mt-2 text-center space-x-3">
+              <button
+                type="button"
+                className="items-center rounded-md border border-transparent bg-indigo-600 px-2 py-0.5 font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                onClick={() => {
+                  addRows(5);
+                }}
+              >
+                +
+              </button>
             </div>
           </div>
         </div>

@@ -13,9 +13,11 @@ const PrimaryLayout: React.FC<IPrimaryLayout> = ({ children, justify = "items-ce
       <Head>
         <title>SwiftFlip</title>
       </Head>
-      <div {...divProps} className={`min-h-screen flex flex-col`}>
+      <div {...divProps} className="min-h-screen flex flex-col">
         <Header />
-        <NewSearch />
+        <div className="flex-grow">
+          <NewSearch />
+        </div>
         <Footer />
       </div>
     </>
