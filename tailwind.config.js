@@ -13,6 +13,17 @@ module.exports = {
       fontFamily: {
         sans: ["Inter", "sans-serif"],
       },
+      colors: {
+        purp: "#574B90",
+        purplight: "#8d83be",
+        purpmid: "#6e61ad",
+        purpdark: "#433a6e",
+        light: "#FFFFFF",
+        lightmid: "#e6e6e6",
+        dark: "#000000",
+        darkmid: "#111111",
+        darklight: "#2a2a2a",
+      },
     },
   },
   plugins: [require("@tailwindcss/forms")],

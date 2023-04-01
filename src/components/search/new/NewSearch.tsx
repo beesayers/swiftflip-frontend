@@ -74,8 +74,16 @@ const NewSearch: React.FC = () => {
       // Set a timeout to ensure the new row has been added to the DOM
       setTimeout(() => {
         // Query all input elements inside the table
-        const inputs = document.querySelectorAll("table input[type=text]");
-        (inputs[rowId + 1] as HTMLInputElement).focus();
+        const nodeList = document.querySelectorAll("table input[type=text]");
+        const currentId = rowId;
+        // Get the ID of the subsequent node
+        const nextNodeId = getNextNodeId(nodeList, currentId);
+        if (nextNodeId !== null) {
+          // Focus the subsequent node
+          document.getElementById(nextNodeId.toString())?.focus();
+        } else {
+          console.log("No subsequent node found");
+        }
       }, 0);
     }
   };
@@ -187,6 +195,38 @@ const NewSearch: React.FC = () => {
       newProducts.splice(index, 1);
       return newProducts;
     });
+    setSelectedProducts((selectedProducts) => {
+      const newSelectedProducts = [...selectedProducts];
+      const index = newSelectedProducts.findIndex((product) => product.rowId === rowId);
+      newSelectedProducts.splice(index, 1);
+      return newSelectedProducts;
+    });
+  };
+
+  const removeRows = (): void => {
+    setProducts((products) => {
+      const newProducts = [...products];
+      return newProducts.filter((newProduct) => {
+        return !selectedProducts.includes(newProduct);
+      });
+    });
+    setSelectedProducts([]);
+  };
+
+  const getNextNodeId = (nodeList: NodeListOf<Element>, currentId: number): number | null => {
+    // Convert the NodeList to an array
+    const nodeArray = Array.from(nodeList);
+
+    // Find the index of the node with the given ID
+    const currentIndex = nodeArray.findIndex((node) => parseInt(node.id) === currentId);
+
+    // If the index is not the last one, return the ID of the subsequent node
+    if (currentIndex !== -1 && currentIndex < nodeArray.length - 1) {
+      return parseInt(nodeArray[currentIndex + 1].id);
+    }
+
+    // If the index is the last one or not found, return null
+    return null;
   };
 
   return (
@@ -212,6 +252,7 @@ const NewSearch: React.FC = () => {
                   <button
                     type="button"
                     className="inline-flex items-center rounded border border-gray-300 bg-red-600 px-2.5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-30"
+                    onClick={removeRows}
                   >
                     Remove
                   </button>
@@ -235,7 +276,7 @@ const NewSearch: React.FC = () => {
               <table className="min-w-full table-fixed divide-y divide-gray-300">
                 <thead className="bg-gray-50">
                   <tr className="divide-x divide-gray-300">
-                    <th scope="col" className="relative w-12 px-6 sm:w-16 sm:px-8 ">
+                    <th scope="col" className="relative w-0 px-6">
                       <input
                         type="checkbox"
                         className="absolute left-4 top-1/2 -mt-2 h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 sm:left-6"
@@ -244,25 +285,25 @@ const NewSearch: React.FC = () => {
                         onChange={toggleAll}
                       />
                     </th>
-                    <th scope="col" className="min-w-[12rem] pl-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                    <th scope="col" className="w-5/12 pl-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                       Product Description
                     </th>
-                    <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                    <th scope="col" className="w-1/12 pl-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                       Results
                     </th>
-                    <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                    <th scope="col" className="w-1/12 pl-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                       Min $
                     </th>
-                    <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                    <th scope="col" className="w-1/12 pl-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                       Med $
                     </th>
-                    <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                    <th scope="col" className="w-1/12 pl-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                       Avg $
                     </th>
-                    <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                    <th scope="col" className="w-1/12 pl-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                       Max $
                     </th>
-                    <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                    <th scope="col" className="w-2/12 pl-3 py-3.5 text-left text-sm font-semibold text-gray-900 ">
                       Action
                     </th>
                   </tr>
@@ -286,7 +327,7 @@ const NewSearch: React.FC = () => {
                       </td>
                       <td
                         className={classNames(
-                          "whitespace-nowrap text-sm font-medium",
+                          "whitespace-nowrap text-sm font-medium py-4",
                           selectedProducts.includes(product) ? "text-indigo-600" : "text-gray-900"
                         )}
                       >
@@ -317,7 +358,7 @@ const NewSearch: React.FC = () => {
                         {product.max !== undefined ? `${product.max.toLocaleString("en-US", { style: "currency", currency: "USD" })}` : ""}
                       </td>
                       <td className="whitespace-nowrap pl-3 py-4 text-sm">
-                        <div className="space-x-1">
+                        <div className={product.quantity !== undefined ? "space-x-1" : "hidden"}>
                           <button
                             className="inline-flex items-center rounded border border-gray-300 bg-blue-600 px-2.5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-30"
                             onClick={() => {
