@@ -10,3 +10,51 @@
     @apply text-center text-blue-500;
   }
 }
+
+.bg-theme {
+  @apply bg-indigo-600;
+}
+
+.dark .bg-theme {
+  @apply bg-gray-900;
+}
+
+.text-theme {
+  @apply text-indigo-200;
+}
+
+.dark .text-theme {
+  @apply text-gray-400;
+}
+
+.button-bg-active-theme {
+  @apply bg-indigo-700;
+}
+
+.button-text-active-theme {
+  @apply text-white;
+}
+
+.dark .button-bg-active-theme {
+  @apply bg-gray-800;
+}
+
+.dark .button-text-active-theme {
+  @apply text-white;
+}
+
+.button-bg-dormant-theme {
+  @apply hover:bg-indigo-700;
+}
+
+.button-text-dormant-theme {
+  @apply text-indigo-200 hover:text-white;
+}
+
+.dark .button-bg-dormant-theme {
+  @apply hover:bg-gray-800;
+}
+
+.dark .button-text-dormant-theme {
+  @apply text-gray-400 hover:text-white;
+}

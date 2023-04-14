@@ -244,7 +244,7 @@ const NewSearch: React.FC = () => {
         <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
             {
-              // add new row button to bottom of this div
+              // This is the div for the main search table.
             }
             <div className="relative overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
               {selectedProducts.length > 0 && (
@@ -264,15 +264,17 @@ const NewSearch: React.FC = () => {
                   </button>
                 </div>
               )}
-              {modalOpen && (
-                <SearchModal
-                  ebaySearchResults={modalProductList}
-                  isOpen={modalOpen}
-                  handleClose={() => {
-                    setModalOpen(!modalOpen);
-                  }}
-                ></SearchModal>
-              )}
+              <div className="lg:pl-64">
+                {modalOpen && (
+                  <SearchModal
+                    ebaySearchResults={modalProductList}
+                    isOpen={modalOpen}
+                    handleClose={() => {
+                      setModalOpen(!modalOpen);
+                    }}
+                  ></SearchModal>
+                )}
+              </div>
               <table className="min-w-full table-fixed divide-y divide-gray-300">
                 <thead className="bg-gray-50">
                   <tr className="divide-x divide-gray-300">
