@@ -1,6 +1,6 @@
 // components/sidebar/Sidebar.tsx
 import { Dialog, Transition } from "@headlessui/react";
-import { ArrowLeftOnRectangleIcon, Bars3Icon, HomeIcon, UsersIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { ArrowLeftOnRectangleIcon, Bars3Icon, HomeIcon, MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -14,8 +14,9 @@ export interface ISidebar {
 
 const navigation = [
   { name: "Home", href: "/", icon: HomeIcon, current: true },
-  { name: "Search", href: "/search", icon: UsersIcon, current: false },
+  { name: "Search", href: "/search", icon: MagnifyingGlassIcon, current: false },
   { name: "Sign In", href: "/signin", icon: ArrowLeftOnRectangleIcon, current: false },
+  { name: "Sign Up", href: "/signup", icon: Bars3Icon, current: false },
 ];
 
 const collections = [{ id: 1, name: "Inventory", href: "#", initial: "I", current: false }];

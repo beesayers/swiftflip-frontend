@@ -1,4 +1,6 @@
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/20/solid";
 import Image from "next/image";
+import React, { ReactElement, useState } from "react";
 
 export interface ISignIn {
   bgNamesLight: string;
@@ -6,16 +8,31 @@ export interface ISignIn {
 }
 
 const SignIn: React.FC<ISignIn> = ({ bgNamesLight, bgNamesDark }) => {
+  const [passwordVisible, setPasswordVisible] = useState(false);
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+
+  const togglePasswordVisibility = (): void => {
+    setPasswordVisible(!passwordVisible);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const getVisibilityIcon = (visible: boolean): ReactElement => {
+    if (visible) {
+      return <EyeSlashIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />;
+    } else {
+      return <EyeIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />;
+    }
+  };
+
   return (
     <>
-      {/*
-        This example requires updating your template:
-
-        ```
-        <html class="h-full bg-gray-50">
-        <body class="h-full">
-        ```
-      */}
       <div className={`flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8 ${bgNamesLight} dark:${bgNamesDark}`}>
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <Image className="mx-auto h-12 w-auto" src="logo/logo_purple.svg" alt="logo" width={1} height={1} />
@@ -33,7 +50,7 @@ const SignIn: React.FC<ISignIn> = ({ bgNamesLight, bgNamesDark }) => {
             <form className="space-y-6" action="#" method="POST">
               <div>
                 <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
-                  Email address
+                  Email Address
                 </label>
                 <div className="mt-2">
                   <input
@@ -47,19 +64,29 @@ const SignIn: React.FC<ISignIn> = ({ bgNamesLight, bgNamesDark }) => {
                 </div>
               </div>
 
+              {/* Password field */}
               <div>
                 <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
                   Password
                 </label>
-                <div className="mt-2">
+                <div className="mt-2 relative">
                   <input
-                    id="password"
+                    type={passwordVisible ? "text" : "password"}
                     name="password"
-                    type="password"
                     autoComplete="current-password"
+                    value={formData.password}
+                    onChange={handleChange}
                     required
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   />
+
+                  <button
+                    type="button"
+                    className="absolute inset-y-0 right-0 flex items-center px-3 py-1.5 focus:outline-none pr-2"
+                    onClick={togglePasswordVisibility}
+                  >
+                    {getVisibilityIcon(passwordVisible)}
+                  </button>
                 </div>
               </div>
 

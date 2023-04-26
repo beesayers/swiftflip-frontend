@@ -1,4 +1,4 @@
-import Signin from "../components/auth/signin/SignIn";
+import SignUp from "../components/auth/signup/SignUp";
 import PrimaryLayout from "../components/layouts/primary/PrimaryLayout";
 import { NextPageWithLayout } from "./page";
 
@@ -10,8 +10,8 @@ export default Home;
 
 Home.getLayout = (page) => {
   return (
-    <PrimaryLayout pageTitle="Sign In" pageDescription="Sign into your account">
-      <Signin bgNamesDark="" bgNamesLight="" />
+    <PrimaryLayout pageTitle="Sign Up" pageDescription="Sign up for an account">
+      <SignUp bgNamesDark="" bgNamesLight="" />
     </PrimaryLayout>
   );
 };
